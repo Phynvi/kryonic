@@ -1,0 +1,5 @@
+.bundle
+pkg/*
+Gemfile.lock
+data/profiles/*.yaml
+data/logs/*.log

@@ -1,0 +1,10 @@
+#!/usr/bin/env ruby
+
+git_path = File.join(File.expand_path('../..', __FILE__), '.git')
+
+if File.exists?(git_path)
+  kryonic_path = File.expand_path('../lib', __FILE__)
+  $:.unshift(kryonic_path)
+end
+
+require "kryonic/cli"
