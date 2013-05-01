@@ -1,4 +1,5 @@
 class Integer
+
   def overflow(i, e = 2 ** 31)
     f = (Math.log(e) / Math.log(2)).to_i+1
     g = (2 ** f) - 1
@@ -128,7 +129,7 @@ module Calyx::Misc
       idx = 0
       high = -1
       
-      (0...(size * 2)).each {|i|
+      (0...(size * 2)).each do |i|
         val = (data[i / 2] >> (4 - 4 * (i % 2))).nibble
         
         if high == -1
@@ -143,7 +144,7 @@ module Calyx::Misc
           high = -1
           idx += 1
         end
-      }
+      end
       
       decode[0...idx].pack("C" * idx)
     end
@@ -151,7 +152,7 @@ module Calyx::Misc
     def TextUtils.optimize(str)
       end_marker = true
       
-      (0...str.length).each {|i|
+      (0...str.length).each do |i|
         if end_marker && str[i].chr >= 'a' && str[i].chr <= 'z'
           str[i] = (str[i].bytes.first - 0x20).chr
           end_marker = false
@@ -160,7 +161,7 @@ module Calyx::Misc
         if str[i].chr == "." || str[i].chr == "!" || str[i].chr == "?"
           end_marker = true
         end
-      }
+      end
       
       str
     end
@@ -177,7 +178,7 @@ module Calyx::Misc
       carry = -1
       offset = 0
       
-      (0...text.size).each {|i|
+      (0...text.size).each do |i|
         table_idx = XLATE_TABLE.find_index {|e| e == text[i].chr} || 0
         table_idx += 195 if table_idx > 12
         
@@ -197,7 +198,7 @@ module Calyx::Misc
           carry = table_idx.nibble
           offset += 1
         end
-      }
+      end
       
       if carry != -1
         data[offset] = (carry << 4).byte
@@ -231,14 +232,14 @@ module Calyx::Misc
     def NameUtils.fix_name(str)
       return str if str.length < 1
       
-      (0...str.length).each {|i|
+      (0...str.length).each do |i|
         if str[i].chr == "_"
           str[i] = " " 
           if i+1 < str.length && str[i+1].chr >= 'a' && str[i+1].chr <= 'z'
             str[i+1] = ((str[i+1].bytes.first + 65) - 97).chr
           end
         end
-      }
+      end
       
       if str[0].chr >= 'a' && str[0].chr <= 'z'
         str[0] = ((str[0].bytes.first + 65) - 97).chr
@@ -266,13 +267,13 @@ module Calyx::Misc
     def NameUtils.name_to_long(name)
       l = 0
       
-      (0...name.length).each {|i|
+      (0...name.length).each do |i|
         c = name[i].chr
         l *= 37
         l += (1  + name[i].bytes.first) - 65 if c >= 'A' and c <= 'Z'
         l += (1  + name[i].bytes.first) - 97 if c >= 'a' and c <= 'z'
         l += (27 + name[i].bytes.first) - 48 if c >= '0' and c <= '9'
-      }
+      end
       
       while l % 37 == 0 && l != 0
         l /= 37
@@ -298,13 +299,18 @@ module Calyx::Misc
   end
   
   class ThreadPool
+    
+    attr_accessor :queue_limit
+
     class Executor
+
       attr_reader :active
       
       def initialize(queue, mutex)
         @thread = Thread.new do
           loop do
             mutex.synchronize { @tuple = queue.shift }
+
             if @tuple
               args, block = @tuple
               @active = true
@@ -319,7 +325,6 @@ module Calyx::Misc
             else
               @active = false
               sleep 0.01
-
             end
           end
         end
@@ -329,9 +334,6 @@ module Calyx::Misc
         @thread.exit
       end
     end
-
-    attr_accessor :queue_limit
-
 
     # Initialize with number of threads to run
     def initialize(count, queue_limit = 0)

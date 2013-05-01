@@ -1,5 +1,7 @@
 module Calyx::Net
+
   class ActionSender
+
     SIDEBAR_INTERFACES = [
       [1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 13, 0],
       [3917, 638, 3213, 1644, 5608, 1151, 5065, 5715, 2449, 4445, 147, 6299, 2423]
@@ -54,9 +56,7 @@ module Calyx::Net
     
     # Update all player skills.
     def send_skills
-      Calyx::Player::Skills::SKILLS.each {|s|
-        send_skill s
-      }
+      Calyx::Player::Skills::SKILLS.each { |s| send_skill s }
       self
     end
     
@@ -75,8 +75,8 @@ module Calyx::Net
     def send_interface(id, walkable = false)
       bldr = PacketBuilder.new(walkable ? 208 : 97)
       
-      if walkable 
-        bldr.add_leshort id 
+      if walkable
+        bldr.add_leshort id
       else 
         bldr.add_short id
       end
@@ -105,9 +105,9 @@ module Calyx::Net
     
     # Send sidebar interfaces.
     def send_sidebar_interfaces
-      SIDEBAR_INTERFACES[0].each_with_index {|e, index|
+      SIDEBAR_INTERFACES[0].each_with_index do |e, index|
         send_sidebar_interface(SIDEBAR_INTERFACES[0][index], SIDEBAR_INTERFACES[1][index])
-      }
+      end
       
       self
     end
@@ -175,7 +175,7 @@ module Calyx::Net
       bldr.add_short interface
       bldr.add_short items.size
       
-      items.each {|item|
+      items.each do |item|
         if item != nil
           count = item.count
           if count > 254
@@ -189,7 +189,7 @@ module Calyx::Net
           bldr.add_byte 0
           bldr.add_leshort_a 0
         end
-      }
+      end
       
       @player.connection.send_data bldr.to_packet
       
@@ -199,7 +199,8 @@ module Calyx::Net
     # Send an update to mutliple items, but not all.
     def send_update_some_items(interface, slots, items)
       bldr = PacketBuilder.new(34, :VARSH).add_short(interface)
-      slots.each {|slot|
+
+      slots.each do |slot|
         item = items[slot]
         bldr.add_smart slot
         
@@ -216,7 +217,7 @@ module Calyx::Net
           bldr.add_short 0
           bldr.add_byte 0
         end
-      }
+      end
       
       @player.connection.send_data bldr.to_packet
       

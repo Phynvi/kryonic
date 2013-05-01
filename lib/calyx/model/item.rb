@@ -1,5 +1,7 @@
 module Calyx::Item
+
   class Item
+
     attr :id
     attr :count
     
@@ -18,10 +20,14 @@ module Calyx::Item
   end
   
   class ItemDefinition
-    # prices, basevalue
-    PROPERTIES = [:name, :noted, :parent, :noteable, :noteID, :stackable, :members, :prices, :basevalue, :att_stab_bonus,
-                  :att_slash_bonus, :att_crush_bonus, :att_magic_bonus, :att_ranged_bonus, :def_stab_bonus, :def_slash_bonus,
-                  :def_crush_bonus, :def_magic_bonus, :def_ranged_bonus, :strength_bonus, :prayer_bonus, :weight]
+
+    PROPERTIES = [:name, :noted, :parent, :noteable, :noteID, 
+      :stackable, :members, :prices, :basevalue, :att_stab_bonus,
+      :att_slash_bonus, :att_crush_bonus, :att_magic_bonus,
+      :att_ranged_bonus, :def_stab_bonus, :def_slash_bonus,
+      :def_crush_bonus, :def_magic_bonus, :def_ranged_bonus, 
+      :strength_bonus, :prayer_bonus, :weight]
+
     BOOL_PROPERTIES = [:noted, :noteable, :stackable, :members, :prices]
     
     @@db = nil
@@ -43,9 +49,7 @@ module Calyx::Item
     end
     
     PROPERTIES.each do |p|
-      define_method(p.id2name) do
-        @properties[p]
-      end
+      define_method(p.id2name) { @properties[p] }
     end
     
     def highalc
@@ -71,6 +75,7 @@ module Calyx::Item
   
   # Container changed
   class ContainerListener
+
     def slot_changed(container, slot)
       raise "Slots change is abstract"
     end
@@ -85,6 +90,7 @@ module Calyx::Item
   end
   
   class InterfaceContainerListener < ContainerListener
+
     attr :player
     attr :interface_id
     
@@ -107,6 +113,7 @@ module Calyx::Item
   end
   
   class WeightListener < ContainerListener
+
     attr :player
     
     def initialize(player)
@@ -141,6 +148,7 @@ module Calyx::Item
   end
   
   class BonusListener < ContainerListener
+
     attr :player
     attr :bonus_names
     
@@ -172,7 +180,9 @@ module Calyx::Item
       end
       
       if bonus
-        player.equipment.items.inject(0) {|sum, item| sum + (item ? item.definition.send(bonus) : 0) }
+        player.equipment.items.inject(0) do |sum, item|
+          sum + (item ? item.definition.send(bonus) : 0)
+        end
       else
         nil
       end
@@ -192,6 +202,7 @@ module Calyx::Item
   end
 
   class Container
+
     MAX_ITEMS = 2**31-1
     attr :capacity
     attr :items
@@ -231,9 +242,9 @@ module Calyx::Item
           fire = @fire_events
           @fire_events = false
         begin
-          item.count.times {
+          item.count.times do
             set get_free_slot, Item.new(item.id) 
-          }
+          end
           fire_items_changed if fire
           return true
         ensure
@@ -282,7 +293,7 @@ module Calyx::Item
           set slot, nil
         end
       else
-        item.count.times {|i|
+        item.count.times do |i|
           slot = slot_for_id item.id
           
           if i == 0 && preferred != -1
@@ -296,7 +307,7 @@ module Calyx::Item
           else
             break
           end
-        }
+        end
       end
       
       return removed
@@ -318,7 +329,9 @@ module Calyx::Item
     end
     
     def count(id)
-      @items.inject(0) {|sum, v| v != nil && v.id == id ? sum + v.count : sum }
+      @items.inject(0) do |sum, v|
+        v != nil && v.id == id ? sum + v.count : sum
+      end
     end
     
     def item_for_id(id)
@@ -358,6 +371,7 @@ module Calyx::Item
           return false if count > MAX_ITEMS or count < 1
           return true
         end
+
         get_free_slot != -1
       else
         free_slots >= item.count
@@ -386,21 +400,15 @@ module Calyx::Item
     end
     
     def fire_slot_changed(slot)
-      @listeners.each {|e|
-        e.slot_changed self, slot 
-      }
+      @listeners.each { |e| e.slot_changed self, slot }
     end
     
     def fire_slots_changed(slots)
-      @listeners.each {|e|
-        e.slots_changed self, slots 
-      }
+      @listeners.each { |e| e.slots_changed self, slots }
     end
     
     def fire_items_changed
-      @listeners.each {|e|
-        e.items_changed self 
-      }
+      @listeners.each { |e| e.items_changed self }
     end
   end
 end

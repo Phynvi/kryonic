@@ -1,6 +1,8 @@
 module Calyx::Model
+
   # The types of damage.
   class HitType
+
     NO_DAMAGE = 0       # blue
     NORMAL_DAMAGE = 1   # red
     POISON_DAMAGE = 2   # green
@@ -8,6 +10,7 @@ module Calyx::Model
   end
   
   class Hit
+
     attr :type
     attr :damage
     
@@ -18,6 +21,7 @@ module Calyx::Model
   end
   
   class Damage
+
     attr :hit1
     attr :hit2
     

@@ -1,5 +1,6 @@
 module Calyx::Engine
   class EventManager
+
     def initialize
       @scheduler = Rufus::Scheduler::PlainScheduler.start_new
     end
@@ -11,7 +12,7 @@ module Calyx::Engine
     private
      
     def submit_delayed(event, delay)
-      @scheduler.in("#{delay}") {|job|
+      @scheduler.in("#{delay}") do |job|
         start = Time.now
          
         if event.running
@@ -36,12 +37,13 @@ module Calyx::Engine
         else
           job.unschedule
         end
-      }
+      end
     end
   end
   
   # Represents a task that is executed in the future, once or periodically.
   class Event
+
     # The delay in milliseconds.
     attr :delay
     
@@ -66,6 +68,7 @@ module Calyx::Engine
   end
     
   class QueuePolicy
+
     # This indicates actions will always be queued.
     ALWAYS = 1
     
@@ -74,6 +77,7 @@ module Calyx::Engine
   end
   
   class WalkablePolicy
+
     # This indicates actions may occur while walking.
     WALKABLE = 1
     
@@ -86,6 +90,7 @@ module Calyx::Engine
   
   # An Event used for handling game actions.
   class Action < Event
+
     attr :player
     
     # Creates a new action for the player, with a specified delay.
@@ -113,6 +118,7 @@ module Calyx::Engine
   
   # Stores a queue of pending actions.
   class ActionQueue
+
     @@max_size = 28
     
     # A queue of Action objects.
@@ -129,10 +135,10 @@ module Calyx::Engine
     
     # Cancels all queued action events.
     def cancel
-      @queue.each {|action|
-        action.stop
-      }
+      @queue.each { |action| action.stop }
+
       @queue.clear
+
       unless @current_action == nil
         @current_action.stop
         @current_action = nil
@@ -159,12 +165,12 @@ module Calyx::Engine
         @current_action = nil
       end
       
-      @queue.each {|action|
+      @queue.each do |action|
         if action.walkable_policy != WalkablePolicy::WALKABLE
           action.stop
           @queue.delete action
         end
-      }
+      end
     end
     
     # Processes next action.

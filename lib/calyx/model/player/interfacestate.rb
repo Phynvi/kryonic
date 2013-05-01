@@ -1,8 +1,9 @@
 module Calyx::Player
+
   class InterfaceState
+
     attr :player
     attr :listeners
-    
     attr :current_interface
     
     # Enter amount data
@@ -28,11 +29,11 @@ module Calyx::Player
     def interface_closed
       @current_interface = -1
       @enter_amount_interface = -1
-      @listeners.each {|e|
+      @listeners.each do |e|
         @player.inventory.listeners.delete e
         @player.equipment.listeners.delete e
         @player.bank.listeners.delete e
-      }
+      end
     end
     
     def add_listener(container, listener)

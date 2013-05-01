@@ -1,5 +1,7 @@
 module Calyx::Net
+
   class Packet
+
     # The opcode for this packet
     attr :opcode
     
@@ -113,38 +115,40 @@ module Calyx::Net
     
     # Reads a V1 integer.
     def read_int1
-
+      nil
     end
     
     # Reads a V2 integer.
     def read_int2
-
+      nil
     end
     
     # Reads a three byte integer, and seeks forward.
     def read_tribyte
-      
+      nil
     end
     
     # Reads a string from the array, and seeks forward.
     def read_str(terminator = 10)
       str = ""
+
       while @buffer.length > 0 and (b = @buffer.unpack("C").first) != terminator
         str << b.chr
         @buffer.slice!(0...1)
       end
+
       @buffer.slice!(0...1)
       str
     end
     
     # Reads a series of bytes in reverse, and seeks forward.
     def read_reverse(is, offset, length)
-      
+      nil
     end
     
     # Reads a series of bytes type a in reverse, and seeks forward.
     def read_reverse_a(is, offset, length)
-      
+      nil
     end
     
     # Reads a series of bytes
@@ -156,12 +160,12 @@ module Calyx::Net
     
     # Reads a smart
     def read_smart
-      
+      nil
     end
     
     # Reads an unsigned smart
     def read_usmart
-      
+      nil
     end
     
     def <<(data)

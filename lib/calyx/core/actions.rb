@@ -1,5 +1,6 @@
 module Calyx::Actions
   class HarvestingAction < Calyx::Engine::Action
+
     attr :loc
   
     def initialize(player, loc)

@@ -1,6 +1,8 @@
 module Calyx::Model
+
   # Physical location in the world
   class Location
+
     attr :x
     attr :y
     attr :z
@@ -55,7 +57,7 @@ module Calyx::Model
     end
     
     def transform(x_offset, y_offset, z_offset)
-      Location.new(@x+x_offset, @y+y_offset, @z+z_offset)
+      Location.new(@x + x_offset, @y + y_offset, @z + z_offset)
     end
   end
 end

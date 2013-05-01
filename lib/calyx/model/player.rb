@@ -1,5 +1,7 @@
 module Calyx::Model
+
   class Player < Calyx::Model::Entity
+
     # The EventMachine connection.
     attr :connection
     attr :session
@@ -35,7 +37,6 @@ module Calyx::Model
     
     # Misc
     attr_accessor :model
-    
     attr :interface_state
     attr :io
     
@@ -112,10 +113,8 @@ module Calyx::Model
       energy = @settings[:energy]
       
       if running
-        # Decrease, we're running
         energy -= 0.6
       else
-        # Increase, we're standing/walking
         energy += 0.2
       end
       

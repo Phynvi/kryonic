@@ -41,4 +41,3 @@ module Calyx
 end
 
 Calyx::Net.load_packets
-

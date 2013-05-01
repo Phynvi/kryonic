@@ -1,5 +1,7 @@
 module Calyx::Model
+
   class Entity
+
     DEFAULT_LOCATION = Calyx::Model::Location.new 2887, 10224, 0
     
     # Info
@@ -32,13 +34,12 @@ module Calyx::Model
     attr_accessor :standanim
     
     # Misc
+    attr_accessor :cached_update
     attr_accessor :animation
     attr_accessor :graphic
     attr_accessor :sprites
     attr :interacting_entity
     attr :forced_chat_msg
-    
-    attr_accessor :cached_update
     
     def initialize
       @flags = Calyx::Misc::Flags.new

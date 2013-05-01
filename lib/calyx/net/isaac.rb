@@ -1,6 +1,8 @@
 module Calyx::Net
+
   # An implementation of an ISAAC cipher used to generate random numbers for packet interchange.
   class ISAAC
+
     # Initializes the ISAAC cipher with the given seed.
     def initialize(seed)
       @aa = 0
@@ -9,9 +11,7 @@ module Calyx::Net
       @mm = []
       @randrsl = Array.new(256, 0)
 
-      seed.each_with_index {|element, i|
-        @randrsl[i] = element
-      }
+      seed.each_with_index { |element, i| @randrsl[i] = element }
 
       randinit
       nil
@@ -38,7 +38,7 @@ module Calyx::Net
       bb = (@bb + (@cc)) & 0xffffffff
       x = y = 0
 
-      (0...256).step(4){|i|
+      (0...256).step(4) do |i|
         x = @mm[i  ]
         aa = ((aa ^ (aa << 13)) + @mm[(i   + 128) & 0xff])
         aa &= 0xffffffff
@@ -59,7 +59,7 @@ module Calyx::Net
         aa &= 0xffffffff
         @mm[i+3] = y = (@mm[(x >> 2) & 0xff] + aa + bb) & 0xffffffff
         r[i+3] = bb = (@mm[(y >> 10) & 0xff] + x) & 0xffffffff
-      }
+      end
 
       @bb = bb
       @aa = aa
@@ -70,7 +70,7 @@ module Calyx::Net
       c = d = e = f = g = h = j = k = 0x9e3779b9
       r = @randrsl
 
-      (1..4).each {
+      (1..4).each do
         c = c ^ (d << 11)
         f += c
         d += e
@@ -95,9 +95,9 @@ module Calyx::Net
         k = k ^ (0x007fffff & (c >> 9))
         e += k
         c += d
-      }
+      end
 
-      (0...256).step(8){|i|
+      (0...256).step(8) do |i|
         c += r[i  ]
         d += r[i+1]
         e += r[i+2]
@@ -138,9 +138,9 @@ module Calyx::Net
         @mm[i+5] = h
         @mm[i+6] = j
         @mm[i+7] = k
-      }
+      end
 
-      (0...256).step(8){|i|
+      (0...256).step(8) do |i|
         c += @mm[i  ]
         d += @mm[i+1]
         e += @mm[i+2]
@@ -181,7 +181,7 @@ module Calyx::Net
         @mm[i+5] = h
         @mm[i+6] = j
         @mm[i+7] = k
-      }
+      end
 
       isaac
       @randcnt = 256

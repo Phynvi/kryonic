@@ -2,6 +2,7 @@ require 'eventmachine'
 require 'socket'
 
 module Calyx::Net
+
   # Connection throttling
   CONNECTION_TIMES = {}
   CONNECTION_COUNTS = {}
@@ -50,6 +51,7 @@ module Calyx::Net
   LOG = Logging.logger['net']
   
   class Connection < EM::Connection
+
     # The current state of the connection.
     attr :state
     

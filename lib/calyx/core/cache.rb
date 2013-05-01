@@ -1,5 +1,6 @@
 module Calyx::Misc
   class Cache
+
     INDEX_SIZE = 6
     DATA_BLOCK_SIZE = 512
     DATA_HEADER_SIZE = 8
@@ -31,8 +32,8 @@ module Calyx::Misc
       cache += 1
       
       index = IO.read(index_file.path, INDEX_SIZE, INDEX_SIZE * file).unpack("c" * 6)
-      file_size  = (index[0].ubyte << 16) | (index[1].ubyte << 8) | index[2].ubyte;
-      file_block = (index[3].ubyte << 16) | (index[4].ubyte << 8) | index[5].ubyte;
+      file_size  = (index[0].ubyte << 16) | (index[1].ubyte << 8) | index[2].ubyte
+      file_block = (index[3].ubyte << 16) | (index[4].ubyte << 8) | index[5].ubyte
       
       remaining_bytes = file_size
       current_block = file_block

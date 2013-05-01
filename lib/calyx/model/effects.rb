@@ -1,6 +1,8 @@
 module Calyx::Model
+
   # Any sort of animation in the game
   class Animation
+
     attr :id
     attr :delay
     
@@ -12,6 +14,7 @@ module Calyx::Model
   
   # Any sort of graphic in the game
   class Graphic
+
     attr :id
     attr :delay
     
@@ -23,6 +26,7 @@ module Calyx::Model
   
   # Chat box message
   class ChatMessage
+
     attr :color
     attr :effects
     attr :text

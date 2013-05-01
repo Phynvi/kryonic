@@ -1,6 +1,8 @@
 module Calyx::Net
+
   # Extended information about a connection that has been validated, but may not have been authenticated yet.
   class Session
+    
     # The EventMachine connection.
     attr :connection
     

@@ -1,5 +1,7 @@
 module Calyx::Net
+
   class JaggrabConnection < EM::Connection
+
     include EM::P::LineText2
     
     PATHS = {

@@ -1,7 +1,10 @@
 module Calyx::Player
+
   # Skills
   class Skills
+
     MAX_EXP = 200000000
+
     SKILLS = [
       :attack,
       :defence,
@@ -25,6 +28,7 @@ module Calyx::Player
       :farming,
       :runecrafting
     ]
+
     attr :skills
     attr :exps
     attr :player
@@ -35,10 +39,11 @@ module Calyx::Player
       @skills ||= {}
       @exps ||= {}
       
-      SKILLS.each {|skill|
+      SKILLS.each do |skill|
         @skills[skill] = 1
         @exps[skill] = 0
-      }
+      end
+
       # Start with 10 hitpoints
       @skills[:hitpoints] = 10
       @exps[:hitpoints] = 1184
@@ -66,26 +71,22 @@ module Calyx::Player
     end
     
     def total_level
-      total = 0
-      @skills.each {|skill|
-        total = total + level_for_exp(skill)
-      }
-      total
+      @skills.inject(0) { |sum, skill| sum + level_for_exp(skill) }
     end
     
     def level_for_exp(skill)
       exp = @exps[skill]
       points = 0
-
       lvl = 1
-      (1..99).each {
+
+      (1..99).each do
         points = points + (lvl + 300.0 * (2.0 ** (lvl / 7.0))).floor
         output = (points / 4).floor
         
         return lvl if output > exp
         
         lvl += 1
-      }
+      end
       
       99
     end
@@ -94,9 +95,9 @@ module Calyx::Player
       level = @skills[skill]
       points = 0
       output = 0
-      
       lvl = 1
-      (1..level).each {
+
+      (1..level).each do
         points = points + (lvl + 300.0 * (2.0 ** (lvl / 7.0))).floor
         
         return output if lvl >= level
@@ -104,7 +105,7 @@ module Calyx::Player
         output = (points / 4).floor
         
         lvl += 1
-      }
+      end
       
       0
     end

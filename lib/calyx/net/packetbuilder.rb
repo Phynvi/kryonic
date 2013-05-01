@@ -1,5 +1,7 @@
 module Calyx::Net
+
   class PacketBuilder
+
     # Bit masks for bit packing
     BIT_MASK_OUT = (0...32).collect {|i| (1 << i) - 1 }
     

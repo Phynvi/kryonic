@@ -1,5 +1,7 @@
 module Calyx::NPC
+
   class NPC < Calyx::Model::Entity
+
     attr :definition
     attr_accessor :direction
     
@@ -18,6 +20,7 @@ module Calyx::NPC
   end
   
   class NPCDefinition
+
     @@definitions = []
     
     attr :id
