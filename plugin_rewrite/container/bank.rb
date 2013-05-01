@@ -1,4 +1,4 @@
-plugin :bank do
+plugin :container do
 
   # TODO Refactor withdraw() and deposit()
 

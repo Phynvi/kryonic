@@ -1,4 +1,4 @@
-plugin :ui do
+plugin :userinterface do
 
   # Run settings
   on_int_button(152) do |player|

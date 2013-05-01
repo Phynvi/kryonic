@@ -1,4 +1,4 @@
-plugin :ui do
+plugin :userinterface do
 
   # Disable chat if player is muted
   on_chat(:mute) do |player, effect, color, message|
