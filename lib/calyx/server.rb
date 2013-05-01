@@ -44,7 +44,7 @@ module Calyx
       load_int_hooks
       load_defs
       load_hooks
-      load_config
+      #load_config
       bind
     end
     
@@ -57,11 +57,17 @@ module Calyx
     
     # Load hooks
     def load_hooks
-      Dir["./plugins/*.rb"].each { |file| load file }
+      #Dir["./plugins/*.rb"].each { |file| load file }
+
+      load "./plugin_rewrite/woodcutting/woodcutting.rb"
+
+      plugin = Calyx::Plugins.get(:woodcutting)
+
+      Calyx::Plugins.run_loader(:woodcutting)
     end
     
     def load_int_hooks
-      Dir["./plugins/internal/*.rb"].each { |file| load file }
+      #Dir["./plugins/internal/*.rb"].each { |file| load file }
     end
     
     def init_cache
@@ -77,7 +83,7 @@ module Calyx
       Calyx::Item::ItemDefinition.load
       
       # Equipment
-      Calyx::Equipment.load
+      #Calyx::Equipment.load
     end
     
     def load_config

@@ -25,7 +25,7 @@ module Calyx
     autoload :ThreadPool,          'calyx/core/util'
     autoload :Cache,               'calyx/core/cache'
   end
-  
+
   module Actions
     autoload :HarvestingAction,    'calyx/core/actions'
   end
@@ -122,5 +122,5 @@ module Calyx
   end
 end
 
-require 'calyx/plugin_hooks'
+require 'calyx/plugins/plugins'
 require 'calyx/net/packetloader'

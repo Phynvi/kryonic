@@ -5,12 +5,8 @@ on_packet(132) {|player, packet|
   y = packet.read_short_a.ushort
   loc = Calyx::Model::Location.new x, y, player.location.z
   next unless player.location.within_interaction_distance?(loc)
-  
-  handler = HOOKS[:obj_click1][id]
-          
-  if handler.instance_of?(Proc)
-    handler.call(player, loc)
-  end
+
+  Calyx::Plugins.run_hook(:obj_click1, id, [player, loc])
 }
 
 # Object option 2

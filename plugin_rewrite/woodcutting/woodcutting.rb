@@ -7,14 +7,15 @@ plugin :woodcutting do
     # Hook each tree object ID
     @trees.each do |tree|
       tree[:objects].each do |id|
+        puts "hooking into #{id}"
         on_obj_option(id) do |player, loc|
           # Change object test
-          object = Calyx::Objects::Object.new(1342, loc, 0, 10, 1278, loc, 0, 3)
-          object.change
-          WORLD.object_manager.objects << object
+          # object = Calyx::Objects::Object.new(1342, loc, 0, 10, 1278, loc, 0, 3)
+          # object.change
+          # WORLD.object_manager.objects << object
 
           # Enqueue action
-          player.action_queue.add WoodcuttingAction.new(player, loc, tree)
+          player.action_queue.add WoodcuttingAction.new(player, loc, tree, self)
         end
       end
     end
@@ -32,9 +33,10 @@ plugin :woodcutting do
     attr_accessor :tree
     attr_accessor :axe
     
-    def initialize(player, loc, tree)
+    def initialize(player, loc, tree, plugin)
       super(player, loc)
       @tree = tree
+      @plugin = plugin
       @cycle_count = 0
     end
      
@@ -42,7 +44,7 @@ plugin :woodcutting do
       level = player.skills.skills[:woodcutting]
       
       # Check if we have a axe we can use
-      @axe = find_axe(player, level)
+      @axe = @plugin.find_axe(player, level)
       
       # Replace with value (hash)
       @axe = @axe[1] unless @axe == nil
