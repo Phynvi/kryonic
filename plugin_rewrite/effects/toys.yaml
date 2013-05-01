@@ -1,0 +1,78 @@
+---
+# Play yo-yo
+- :id: 4079
+  :hook: :item_click
+  :animation: 1457
+
+# Crazy yo-yo
+- :id: 4079
+  :hook: :item_click2
+  :animation: 1460
+
+# Walk yo-yo
+- :id: 4079
+  :hook: :item_alt2
+  :animation: 1459
+
+# Jump marionette (blue)
+- :id: 6865
+  :hook: :item_click
+  :animation: 3003
+  :graphic: 511
+  :delay: 2
+
+# Jump marionette (green)
+- :id: 6866
+  :hook: :item_click
+  :animation: 3003
+  :graphic: 515
+  :delay: 2
+
+# Jump marionette (red)
+- :id: 6867
+  :hook: :item_click
+  :animation: 3003
+  :graphic: 507
+  :delay: 2
+
+# Dance marionette (blue)
+- :id: 6865
+  :hook: :item_click2
+  :animation: 3006
+  :graphic: 514
+  :delay: 2
+
+# Dance marionette (green)
+- :id: 6866
+  :hook: :item_click2
+  :animation: 3006
+  :graphic: 518
+  :delay: 2
+
+# Dance marionette (red)
+- :id: 6867
+  :hook: :item_click2
+  :animation: 3006
+  :graphic: 510
+  :delay: 2
+
+# Bow marionette (blue)
+- :id: 6865
+  :hook: :item_alt2
+  :animation: 3005
+  :graphic: 513
+  :delay: 2
+
+# Bow marionette (green)
+- :id: 6866
+  :hook: :item_alt2
+  :animation: 3005
+  :graphic: 517
+  :delay: 2
+
+# Bow marionette (red)
+- :id: 6867
+  :hook: :item_alt2
+  :animation: 3005
+  :graphic: 509
+  :delay: 2
