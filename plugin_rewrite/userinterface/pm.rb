@@ -1,4 +1,5 @@
-module Calyx::PM
+plugin :userinterface do
+
   class Presence
   
     @@last_message_index = 0
@@ -84,80 +85,80 @@ module Calyx::PM
       @@last_message_index += 1
     end
   end
+
+  # Login
+  on_player_login(:pm) do |player|
+    player.varp.friends ||= []
+    player.varp.ignores ||= []
+    player.var.pm = Presence.new(player)
+  end
+
+  # Logout
+  on_player_logout(:pm) do |player|
+    player.var.pm.unregistered
+  end
+
+  # Send message
+  on_packet(126) do |player, packet|
+    player.var.pm.send_message packet.read_long, packet
+  end
+
+  # Add friend
+  on_packet(188) do |player, packet|
+    name = packet.read_long
+    
+    if player.name_long == name
+      player.io.send_message "You cannot add yourself as a friend."
+      next
+    end
+    
+    friends = player.varp.friends
+    
+    if friends.size >= 200
+      player.io.send_message "Your friends list is full."
+      next
+    end
+    
+    if friends.include?(name)
+      player.io.send_message "#{Calyx::Misc::NameUtils.long_to_name(name)} is already on your friends list."
+      next
+    end
+    
+    friends << name
+    player.var.pm.send_friend name
+  end
+
+  # Add ignore
+  on_packet(133) do |player, packet|
+    name = packet.read_long
+
+    if player.name_long == name
+      player.io.send_message "You cannot ignore yourself."
+      next
+    end
+    
+    ignores = player.varp.ignores
+
+    if ignores.size >= 200
+      player.io.send_message "Your ignore list is full."
+      next
+    end
+    
+    if ignores.include?(name)
+      player.io.send_message "#{Calyx::Misc::NameUtils.long_to_name(name)} is already on your ignore list."
+      next
+    end
+    
+    ignores << name
+  end
+
+  # Remove friend
+  on_packet(215) do |player, packet|
+    player.varp.friends.delete packet.read_long
+  end
+
+  # Remove ignore
+  on_packet(74) do |player, packet|
+    player.varp.ignores.delete packet.read_long
+  end
 end
-
-# Login
-on_player_login(:pm) {|player|
-  player.varp.friends ||= []
-  player.varp.ignores ||= []
-  player.var.pm = Calyx::PM::Presence.new(player)
-}
-
-# Logout
-on_player_logout(:pm) {|player|
-  player.var.pm.unregistered
-}
-
-# Send message
-on_packet(126) {|player, packet|
-  player.var.pm.send_message packet.read_long, packet
-}
-
-# Add friend
-on_packet(188) {|player, packet|
-  name = packet.read_long
-  
-  if player.name_long == name
-    player.io.send_message "You cannot add yourself as a friend."
-    next
-  end
-  
-  friends = player.varp.friends
-  
-  if friends.size >= 200
-    player.io.send_message "Your friends list is full."
-    next
-  end
-  
-  if friends.include?(name)
-    player.io.send_message "#{Calyx::Misc::NameUtils.long_to_name(name)} is already on your friends list."
-    next
-  end
-  
-  friends << name
-  player.var.pm.send_friend name
-}
-
-# Add ignore
-on_packet(133) {|player, packet|
-  name = packet.read_long
-
-  if player.name_long == name
-    player.io.send_message "You cannot ignore yourself."
-    next
-  end
-  
-  ignores = player.varp.ignores
-
-  if ignores.size >= 200
-    player.io.send_message "Your ignore list is full."
-    next
-  end
-  
-  if ignores.include?(name)
-    player.io.send_message "#{Calyx::Misc::NameUtils.long_to_name(name)} is already on your ignore list."
-    next
-  end
-  
-  ignores << name
-}
-
-# Remove friend
-on_packet(215) {|player, packet|
-  player.varp.friends.delete packet.read_long
-}
-
-# Remove ignore
-on_packet(74) {|player, packet|
-  player.varp.ignores.delete packet.read_long
-}

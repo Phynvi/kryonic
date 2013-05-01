@@ -24,7 +24,7 @@ module Calyx
         :logger => :white,
         :message => :white
       )
-    
+
       Logging.logger.root.add_appenders(
         Logging.appenders.stdout(
           'stdout',
@@ -34,7 +34,7 @@ module Calyx
         )),
         Logging.appenders.file('data/logs/development.log', :layout => Logging.layouts.pattern(:pattern => '[%d] %-5l %c: %m\n'))
       )
-      
+
       @log = Logging.logger['server']
     end
   
