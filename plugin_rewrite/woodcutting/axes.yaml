@@ -1,0 +1,35 @@
+---
+# Iron axe
+1349:
+  :level: 1
+  :animation: 877
+
+# Bronze axe 
+1351:
+  :level: 1
+  :animation: 879
+
+# Steel axe
+1353:
+  :level: 6
+  :animation: 875
+
+# Mithril axe
+1355:
+  :level: 21
+  :animation: 871
+
+# Adamant axe
+1357:
+  :level: 31
+  :animation: 869
+
+# Rune axe
+1359:
+  :level: 41
+  :animation: 867
+
+# Black axe
+1361:
+  :level: 6
+  :animation: 873

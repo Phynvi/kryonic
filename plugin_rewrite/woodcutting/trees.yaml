@@ -1,0 +1,58 @@
+---
+# Tree
+- :log: 1511
+  :level: 1
+  :xp: 50
+  :objects: [1276, 1277, 1278, 1279, 1280, 1282,
+    1283, 1284, 1285, 1286, 1289, 1290, 1291, 1315,
+    1316, 1318, 1319, 1330, 1331, 1332, 1365, 1383,
+    1384, 2409, 3033, 3034, 3035, 3036, 3881, 3882,
+    3883, 5902, 5903, 5904]
+
+# Willow tree
+- :log: 1519
+  :level: 30
+  :xp: 135
+  :objects: [1308, 5551, 5552, 5553]
+
+# Oak tree
+- :log: 1521
+  :level: 15
+  :xp: 75
+  :objects: [1281, 3037]
+
+# Magic tree
+- :log: 1513
+  :level: 75
+  :xp: 500
+  :objects: [1292, 1306]
+
+# Maple tree
+- :log: 1517
+  :level: 45
+  :xp: 200
+  :objects: [1307, 4677]
+
+# Mahogany tree
+- :log: 6332
+  :level: 50
+  :xp: 250
+  :objects: [9034]
+
+# Teak tree
+- :log: 6333
+  :level: 35
+  :xp: 170
+  :objects: [9036]
+
+# Achey tree
+- :log: 2862
+  :level: 1
+  :xp: 50
+  :objects: [2023]
+
+# Yew tree
+- :log: 1515
+  :level: 60
+  :xp: 350
+  :objects: [1309]
