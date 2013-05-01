@@ -1,5 +1,7 @@
 module Calyx::Tasks
+
   class SystemUpdateEvent < Calyx::Engine::Event
+
     attr :state
     attr :seconds
   
@@ -24,9 +26,7 @@ module Calyx::Tasks
       @state = :kick
       @delay = @seconds * 1000
       
-      WORLD.players.each {|p|
-        p.io.send_system_update @seconds
-      }
+      WORLD.players.each { |p| p.io.send_system_update @seconds }
     end
     
     def kick
@@ -34,10 +34,10 @@ module Calyx::Tasks
       SERVER.updatemode = true
     
       # Kick all users
-      WORLD.players.delete_if {|p|
+      WORLD.players.delete_if do |p|
         WORLD.unregister(p, false)
         true
-      }
+      end
       
       @state = :wait_for_saves
       @delay = 1000

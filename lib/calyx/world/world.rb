@@ -1,12 +1,14 @@
 require 'yaml'
 
 module Calyx::World
+
   RIGHTS = [:player, :mod, :admin, :owner]
   
   PROFILE_LOG = Logging.logger['profile']
   PLUGIN_LOG  = Logging.logger['plugin']
   
   class World
+
     attr :players
     attr :npcs
     attr :region_manager
@@ -69,28 +71,28 @@ module Calyx::World
       
       player.connection.send_data bldr.to_packet
       
-      HOOKS[:player_login].each {|k, v| 
+      HOOKS[:player_login].each do |k, v| 
         begin
           v.call(player)
         rescue Exception => e
           PLUGIN_LOG.error "Unable to run login hook #{k}"
           PLUGIN_LOG.error e
         end
-      }
+      end
       
       player.io.send_login
     end
     
     def unregister(player, single=true)
       if @players.include?(player)
-        HOOKS[:player_logout].each {|k, v| 
+        HOOKS[:player_logout].each do |k, v| 
           begin
             v.call(player)
           rescue Exception => e
             PLUGIN_LOG.error "Unable to run logout hook #{k}"
             PLUGIN_LOG.error e
           end
-        }
+        end
       
         player.destroy
         player.connection.close_connection_after_writing
@@ -126,6 +128,7 @@ module Calyx::World
   end
   
   class LoginResult
+
     attr_reader :response
     attr_reader :player
     
@@ -136,6 +139,7 @@ module Calyx::World
   end
   
   class Loader
+
     def check_login(session)
       raise "check_login not implemented"
     end
@@ -150,13 +154,14 @@ module Calyx::World
   end
   
   class YAMLFileLoader < Loader
+
     def check_login(session)
       # Check password validity
       unless validate_credentials(session.username, session.password)
         return LoginResult.new(3, nil)
       end
       
-      existing = WORLD.players.find(nil) {|p| p.name.eql?(session.username)}
+      existing = WORLD.players.find(nil) { |p| p.name.eql?(session.username) }
       
       if existing == nil
         # no existing user with this name, new login
@@ -234,31 +239,31 @@ module Calyx::World
     end
     
     def encode_skills(skills)
-      Calyx::Player::Skills::SKILLS.inject([]){|arr, sk|
+      Calyx::Player::Skills::SKILLS.inject([]) do |arr, sk|
         arr << [skills.skills[sk], skills.exps[sk]]
-      }
+      end
     end
     
     def decode_skills(skills, data)
-      data.each_with_index {|val, i|
+      data.each_with_index do |val, i|
         skills.set_skill Calyx::Player::Skills::SKILLS[i], val[0], val[1], false
-      }
+      end
     end
     
     def encode_container(container)
       arr = Array.new(container.capacity, [-1, -1])
       
-      container.items.each_with_index {|val, i|
+      container.items.each_with_index do |val, i|
         arr[i] = [val.id, val.count] unless val == nil
-      }
+      end
       
       arr
     end
     
     def decode_container(container, arr)
-      arr.each_with_index {|val, i|
+      arr.each_with_index do |val, i|
         container.set i, (val[0] == -1 ? nil : Calyx::Item::Item.new(val[0], val[1]))
-      }
+      end
     end
     
     def default_profile(player)

@@ -1,5 +1,7 @@
 module Calyx::Tasks
+
   class PlayerTickTask
+
     attr :player
     
     def initialize(player)
@@ -20,6 +22,7 @@ module Calyx::Tasks
   end
 
   class PlayerResetTask
+
     attr :player
     
     def initialize(player)
@@ -38,6 +41,7 @@ module Calyx::Tasks
   end
 
   class PlayerUpdateTask
+
     attr :player
     
     def initialize(player)
@@ -57,7 +61,7 @@ module Calyx::Tasks
       
       # Process local player list
       packet.add_bits 8, @player.local_players.size
-      @player.local_players.delete_if {|p|
+      @player.local_players.delete_if do |p|
         should_remove = !WORLD.players.include?(p) || p.teleporting || !p.location.within_distance?(@player.location)
         
         if should_remove
@@ -69,10 +73,10 @@ module Calyx::Tasks
         end
       
         should_remove
-      }
+      end
       
       # Check if we should add any new players to the list
-      WORLD.region_manager.get_local_players(@player).each {|p|
+      WORLD.region_manager.get_local_players(@player).each do |p|
         # Make sure we have space and avoid duplicates
         break if @player.local_players.size >= 255
         next if p.index == nil || p.eql?(@player) || @player.local_players.include?(p)
@@ -81,7 +85,7 @@ module Calyx::Tasks
         @player.local_players << p
         add_new_player packet, p
         update_player update_block, p, true, false
-      }
+      end
       
       unless update_block.empty?
         packet.add_bits 11, 2047
@@ -179,13 +183,13 @@ module Calyx::Tasks
         props.add_short -1
         props.add_short p.model
       else
-        (0...4).each {|i|
+        (0...4).each do |i|
           if eq.is_slot_used(i)
             props.add_short (0x200 + eq.items[i].id).short
           else
             props.add_byte 0
           end
-        }
+        end
         
         # Chest
         if eq.is_slot_used(4)

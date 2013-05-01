@@ -1,5 +1,7 @@
 module Calyx::Objects
+
   class ObjectManager
+
     attr :objects
    
     def initialize
@@ -8,6 +10,7 @@ module Calyx::Objects
   end
   
   class Object
+
     attr_accessor :id
     attr_accessor :location
     attr_accessor :face
@@ -43,15 +46,15 @@ module Calyx::Objects
         return
       end
       
-      WORLD.region_manager.get_local_players(@location).each {|p|
+      WORLD.region_manager.get_local_players(@location).each do |p|
         # Remove old object if the new object is in a new location
         if @location != @orig_location
-            p.io.send_replace_object(@orig_location, p.last_location, -1, @face, @type)
+          p.io.send_replace_object(@orig_location, p.last_location, -1, @face, @type)
         end
         
         # Create the new object for all local players
         p.io.send_replace_object(@location, p.last_location, @id, @face, @type)
-      }
+      end
     end
     
     def reset(player = nil)
@@ -67,25 +70,26 @@ module Calyx::Objects
        end
        
        
-       WORLD.region_manager.get_local_players(@location).each {|p|
-         # Remove object if the object was in a new location
-         if @location != @orig_location
-           p.io.send_replace_object(@location, p.last_location, -1, @orig_face, @type)
-         end
+       WORLD.region_manager.get_local_players(@location).each do |p|
+          # Remove object if the object was in a new location
+          if @location != @orig_location
+            p.io.send_replace_object(@location, p.last_location, -1, @orig_face, @type)
+          end
          
-         # Create the new object for all local players
-         p.io.send_replace_object(@orig_location, p.last_location, @orig_id, @orig_face, @type)
-       }
+          # Create the new object for all local players
+          p.io.send_replace_object(@orig_location, p.last_location, @orig_id, @orig_face, @type)
+       end
     end
   end
   
   class ObjectEvent < Calyx::Engine::Event
+
      def initialize()
        super(1000)
      end
      
      def execute
-       WORLD.object_manager.objects.each {|object|
+       WORLD.object_manager.objects.each do |object|
          object.delay -= 1
          
          if object.delay <= 0
@@ -93,7 +97,7 @@ module Calyx::Objects
            
            WORLD.object_manager.objects.delete object
          end
-       }
+       end
      end
    end
 end

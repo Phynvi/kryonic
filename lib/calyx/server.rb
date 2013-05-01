@@ -1,5 +1,7 @@
 module Calyx
+
   class Server
+
     attr :config
     attr_accessor :updatemode
     attr_accessor :max_players
@@ -55,11 +57,11 @@ module Calyx
     
     # Load hooks
     def load_hooks
-      Dir["./plugins/*.rb"].each {|file| load file }
+      Dir["./plugins/*.rb"].each { |file| load file }
     end
     
     def load_int_hooks
-      Dir["./plugins/internal/*.rb"].each {|file| load file }
+      Dir["./plugins/internal/*.rb"].each { |file| load file }
     end
     
     def init_cache
@@ -91,9 +93,7 @@ module Calyx
     def bind
       EventMachine.run do
         Signal.trap("INT") {
-          WORLD.players.each {|p|
-            WORLD.unregister(p)
-          }
+          WORLD.players.each { |p| WORLD.unregister(p) }
           
           while WORLD.work_thread.waiting > 0
             sleep(0.01)

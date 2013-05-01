@@ -1,25 +1,29 @@
 require 'xmlsimple'
 
 module Calyx::Shops
+
   class ShopManager
+
     @@shops = {}
       
     def load_shops
       data = XmlSimple.xml_in("data/shops.xml")
-      data["shop"].each {|row|
+      data["shop"].each do |row|
         @@shops[row['id'].to_i] = shop = Shop.new
         shop.name = row['name']
         shop.generalstore = row['generalstore'].eql?("true")  # buy modifier
         shop.customstock = row['customstock'].eql?("true")    # sell modifier
         stock = {}
         
-        row['item'].each {|item|
-          items = item.inject({}) {|result, (key, value)| result[key] = value.to_i; result }
+        row['item'].each do |item|
+          items = item.inject({}) do |result, (key, value)|
+            result[key] = value.to_i; result
+          end
           stock.store *items.values
-        }
+        end
         
         shop.original_stock = stock
-      }
+      end
     end
     
     def ShopManager.get(id)
@@ -207,6 +211,7 @@ module Calyx::Shops
   end
     
   class Shop
+
     attr :container
     attr_accessor :name
     attr_accessor :generalstore
@@ -220,9 +225,9 @@ module Calyx::Shops
     def original_stock=(stock)
       @container.clear
       @original_stock = stock
-      @original_stock.each {|item, amount|
+      @original_stock.each do |item, amount|
         @container.items << Calyx::Item::Item.new(item, amount)
-      }
+      end
     end
   end
 end

@@ -1,12 +1,12 @@
 module Calyx::World
+
   class ItemSpawns
+
     @@items = []
     
     def ItemSpawns.load
       items = XmlSimple.xml_in("data/item_spawns.xml")
-      items["item"].each_with_index {|row, idx|
-        @@items << Item.new(row)
-      }
+      items["item"].each_with_index { |row, idx| @@items << Item.new(row) }
       
       # TODO move out?
       WORLD.submit_event ItemEvent.new
@@ -18,22 +18,24 @@ module Calyx::World
   end
   
   class ItemEvent < Calyx::Engine::Event
+
     def initialize()
       super(1000)
     end
     
     def execute
-      ItemSpawns.items.each {|item|
+      ItemSpawns.items.each do |item|
         item.respawn -= 1 if item.picked_up
         
         if item.picked_up && item.respawn <= 0
           item.spawn
         end
-      }
+      end
     end
   end
   
   class Item
+
     attr :item
     attr :location
     attr_accessor :respawn
@@ -53,9 +55,9 @@ module Calyx::World
     def remove
       @picked_up = true
       
-      WORLD.region_manager.get_local_players(@location).each {|player|
+      WORLD.region_manager.get_local_players(@location).each do |player|
         player.io.send_grounditem_removal(self)
-      }
+      end
     end
     
     def spawn(player = nil)
@@ -67,9 +69,9 @@ module Calyx::World
         return
       end
       
-      WORLD.region_manager.get_local_players(@location).each {|p|
+      WORLD.region_manager.get_local_players(@location).each do |p|
         p.io.send_grounditem_creation(self)
-      }
+      end
     end
     
     def within_distance?(player)

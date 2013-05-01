@@ -1,5 +1,7 @@
 module Calyx::Tasks
+
   class NPCTickTask
+
     attr :npc
     
     def initialize(npc)
@@ -16,6 +18,7 @@ module Calyx::Tasks
   end
 
   class NPCResetTask
+
     attr :npc
     
     def initialize(npc)
@@ -33,6 +36,7 @@ module Calyx::Tasks
   end
 
   class NPCUpdateTask
+
     attr :player
     
     def initialize(player)
@@ -49,7 +53,7 @@ module Calyx::Tasks
       packet.add_bits 8, @player.local_npcs.size
       
       # Go through every local NPC.
-      @player.local_npcs.delete_if {|npc|
+      @player.local_npcs.delete_if do |npc|
         should_remove = !WORLD.npcs.include?(npc) || npc.teleporting || !npc.location.within_distance?(@player.location)
         
         if should_remove
@@ -64,10 +68,10 @@ module Calyx::Tasks
         end
         
         should_remove
-      }
+      end
       
       # Go through every NPC in the world.
-      WORLD.region_manager.get_local_npcs(@player).each {|npc|
+      WORLD.region_manager.get_local_npcs(@player).each do |npc|
         # Make sure we have space and avoid duplicates.
         break if @player.local_npcs.size >= 255
         next if @player.local_npcs.include?(npc)
@@ -82,7 +86,7 @@ module Calyx::Tasks
         if npc.flags.update_required?
           update_npc update_block, npc
         end
-      }
+      end
       
       unless update_block.empty?
         packet.add_bits 14, 16383

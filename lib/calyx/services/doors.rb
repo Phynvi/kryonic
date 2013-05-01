@@ -1,5 +1,7 @@
 module Calyx::Doors
+
   class DoorManager
+
     @@single_data = []
     @@double_data = []
     @@open_single_doors = [  
@@ -15,7 +17,7 @@ module Calyx::Doors
     
     def load_single_doors
       d = XmlSimple.xml_in("data/doors_single.xml")
-      d["door"].each_with_index {|row, idx|
+      d["door"].each_with_index do |row, idx|
         @@single_data << 
           {
             :id => row['id'].to_i,
@@ -23,49 +25,51 @@ module Calyx::Doors
             :face => row['face'].to_i,
             :type => row['type'].to_i
           }
-      }
+      end
       
-      @@single_data.each {|door|
+      @@single_data.each do |door|
         handler = HOOKS[:obj_click1][door[:id]]
         if !handler.instance_of?(Proc)
-          on_obj_option(door[:id]) {|player, loc|
+          on_obj_option(door[:id]) do |player, loc|
             return unless player.location.within_interaction_distance?(loc)
             
             player.walking_queue.reset
             handle_door door[:id], loc
-          }
+          end
         end
-      }
+      end
     end
     
     def load_double_doors
       d = XmlSimple.xml_in("data/doors_double.xml")
-      d["door"].each_with_index {|row, idx|
+      d["door"].each_with_index do |row, idx|
        @@double_data << 
           {
-           :id => row['id'].to_i,
-           :location => Calyx::Model::Location.new(row['x'].to_i, row['y'].to_i, row['z'].to_i),
-           :face => row['face'].to_i,
-           :type => 0
+            :id => row['id'].to_i,
+            :location => Calyx::Model::Location.new(row['x'].to_i, row['y'].to_i, row['z'].to_i),
+            :face => row['face'].to_i,
+            :type => 0
           }
-      }
+      end
       
-      @@double_data.each {|door|
+      @@double_data.each do |door|
         handler = HOOKS[:obj_click1][door[:id]]
           
         if !handler.instance_of?(Proc)
-          on_obj_option(door[:id]) {|player, loc|
+          on_obj_option(door[:id]) do |player, loc|
             return unless player.location.within_interaction_distance?(loc)
             
             player.walking_queue.reset
             handle_double_door door[:id], loc
-          }
+          end
         end
-      }
+      end
     end
     
     def handle_door(id, loc)
-      door = WORLD.object_manager.objects.find {|d| d && d.id == id && d.location == loc }
+      door = WORLD.object_manager.objects.find do |d|
+        d && d.id == id && d.location == loc
+      end
       
       if door != nil
         # Reset cause it's already changed
@@ -76,7 +80,7 @@ module Calyx::Doors
         data = get_data id, loc
         return unless data != nil
       
-        open = @@open_single_doors.find {|val| val == id} != nil
+        open = @@open_single_doors.find { |val| val == id } != nil
         
         # Change door for the first time
         WORLD.object_manager.objects << door = Door.new(data, open)
@@ -84,9 +88,9 @@ module Calyx::Doors
         # Move and rotate
         change_state door
         
-        WORLD.region_manager.get_local_players(door.location, false).each {|p|
+        WORLD.region_manager.get_local_players(door.location, false).each do |p|
           p.io.send_replace_object(door.location, p.last_location, door.id, door.face, door.type)
-        }
+        end
       end
     end
     
@@ -123,9 +127,9 @@ module Calyx::Doors
       end
       
       if x_off != 0 || y_off != 0
-        WORLD.region_manager.get_local_players(door.location, false).each {|p|
+        WORLD.region_manager.get_local_players(door.location, false).each do |p|
           p.io.send_replace_object(door.location, p.last_location, -1, 0, door.type)
-        }
+        end
       end
       
       door.id -= 1 if door.open
@@ -135,7 +139,9 @@ module Calyx::Doors
     end
     
     def handle_double_door(id, loc)
-      door = WORLD.object_manager.objects.find {|d| d.kind_of?(DoubleDoor) && (d.id == id && d.location == loc || d.r_door_id == id && d.r_door_location == loc) }
+      door = WORLD.object_manager.objects.find do |d|
+        d.kind_of?(DoubleDoor) && (d.id == id && d.location == loc || d.r_door_id == id && d.r_door_location == loc)
+      end
 
       if door != nil
         # Reset cause it's already changed
@@ -146,7 +152,7 @@ module Calyx::Doors
         data = DoorManager.get_double_data id, loc
         return unless data != nil
       
-        open = @@open_double_doors.find {|val| val == id} != nil
+        open = @@open_double_doors.find { |val| val == id } != nil
         
         # Change door for the first time
         WORLD.object_manager.objects << door = DoubleDoor.new(data, open)
@@ -174,9 +180,9 @@ module Calyx::Doors
       end
       
       if x_off != 0 || y_off != 0
-       WORLD.region_manager.get_local_players(door.location, false).each {|p|
+       WORLD.region_manager.get_local_players(door.location, false).each do |p|
          p.io.send_replace_object(door.location, p.last_location, -1, 0, 0)
-       }
+       end
       end
       
       door.id -= 1 if door.open
@@ -185,9 +191,9 @@ module Calyx::Doors
       door.location = door.location.transform x_off, y_off, 0
       
       if door.id != nil
-        WORLD.region_manager.get_local_players(door.location, false).each {|p|
+        WORLD.region_manager.get_local_players(door.location, false).each do |p|
           p.io.send_replace_object(door.location, p.last_location, door.id, door.face, 0)
-        }
+        end
       end
       
       # Right
@@ -217,9 +223,9 @@ module Calyx::Doors
       end
       
       if x_off != 0 || y_off != 0
-       WORLD.region_manager.get_local_players(door.r_door_location, false).each {|p|
-         p.io.send_replace_object(door.r_door_location, p.last_location, -1, 0, 0)
-       }
+       WORLD.region_manager.get_local_players(door.r_door_location, false).each do |p|
+          p.io.send_replace_object(door.r_door_location, p.last_location, -1, 0, 0)
+        end
       end
       
       door.r_door_id -= 1 if door.open
@@ -228,22 +234,23 @@ module Calyx::Doors
       door.r_door_location = door.r_door_location.transform x_off, y_off, 0
       
       if door.r_door_id != nil
-        WORLD.region_manager.get_local_players(door.location, false).each {|p|
+        WORLD.region_manager.get_local_players(door.location, false).each do |p|
           p.io.send_replace_object(door.r_door_location, p.last_location, door.r_door_id, door.r_door_face, 0)
-        }
+        end
       end
     end
     
     def get_data(id, loc)
-      @@single_data.find {|door| door[:id] == id && door[:location] == loc }
+      @@single_data.find { |door| door[:id] == id && door[:location] == loc }
     end
     
     def self.get_double_data(id, loc)
-      @@double_data.find {|door| door[:id] == id && door[:location] == loc }
+      @@double_data.find { |door| door[:id] == id && door[:location] == loc }
     end
   end
   
   class Door < Calyx::Objects::Object
+
     attr :open
     
     def initialize(data, open = true)
@@ -253,6 +260,7 @@ module Calyx::Doors
   end
   
   class DoubleDoor < Door
+
     attr_accessor :r_door_id
     attr_accessor :r_door_location
     attr_accessor :r_door_face
@@ -369,10 +377,10 @@ module Calyx::Doors
     def reset
       if @location != @orig_location
         # Remove the old replaced doors if they moved
-        WORLD.region_manager.get_local_players(@location, false).each {|p|
+        WORLD.region_manager.get_local_players(@location, false).each do |p|
           p.io.send_replace_object(@location, p.last_location, -1, 0, 0)
           p.io.send_replace_object(@r_door_location, p.last_location, -1, 0, 0)
-        }
+        end
       end
       
       # Reset ids/positions/rotations
@@ -384,10 +392,10 @@ module Calyx::Doors
       @r_door_face = @r_door_orig_face
       
       # Add back to original locations
-      WORLD.region_manager.get_local_players(@location, false).each {|p|
+      WORLD.region_manager.get_local_players(@location, false).each do |p|
         p.io.send_replace_object(@location, p.last_location, @id, @face, 0)
         p.io.send_replace_object(@r_door_location, p.last_location, @r_door_id, @r_door_face, 0)
-      }
+      end
     end
     
     def id

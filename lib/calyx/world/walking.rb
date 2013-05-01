@@ -1,10 +1,12 @@
 module Calyx::World
+
   MAXIMUM_SIZE = 50
   DIRECTION_DELTA_X = [-1, 0, 1, -1, 1, -1, 0, 1]
   DIRECTION_DELTA_Y = [1, 1, 1, 0, 0, -1, -1, -1]
   DIRECTIONS = [[5, 3, 0], [6, -1, 1], [7, 4, 2]]
   
   class Pathfinder
+
     attr :entity, :waypoints
     attr_accessor :run_toggle, :run_queue
     
@@ -35,11 +37,11 @@ module Calyx::World
       dx = x - last.x
       dy = y - last.y
       max = [dx.abs, dy.abs].max
-      (0...max).each {
+      (0...max).each do
         dx += 0 <=> dx
         dy += 0 <=> dy
         add_step_internal x - dx, y - dy
-      }
+      end
     end
     
     def next_movement
@@ -93,6 +95,7 @@ module Calyx::World
   end
   
   class Point
+
     attr :x, :y, :dir
     
     def initialize(x, y, dir)

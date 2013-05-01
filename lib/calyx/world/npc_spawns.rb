@@ -1,5 +1,7 @@
 module Calyx::World
+
   class NPCSpawns
+
     DIRECTIONS = {
       :north => [0, 1],
       :south => [0, -1],
@@ -13,9 +15,7 @@ module Calyx::World
     
     def NPCSpawns.load
       npc = XmlSimple.xml_in("data/npc_spawns.xml")
-      npc["npc"].each_with_index {|row, idx|
-        NPCSpawns.spawn(row)
-      }
+      npc["npc"].each_with_index { |row, idx| NPCSpawns.spawn(row) }
     end
     
     def NPCSpawns.spawn(data)
@@ -36,10 +36,10 @@ module Calyx::World
         handler = HOOKS[:npc_option2][data['id'].to_i]
 
         if !handler.instance_of?(Proc)
-          on_npc_option2(data['id'].to_i) {|player, npc|
+          on_npc_option2(data['id'].to_i) do |player, npc|
             Calyx::Shops::ShopManager.open(data['shop'].to_i, player)
             player.interacting_entity = npc
-          }
+          end
         end
       end
     end

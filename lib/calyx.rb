@@ -124,4 +124,3 @@ end
 
 require 'calyx/plugin_hooks'
 require 'calyx/net/packetloader'
-

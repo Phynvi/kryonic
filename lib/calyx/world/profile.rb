@@ -1,5 +1,7 @@
 module Calyx::World
+
   class Profile
+
     #include MongoMapper::Document
     
     #set_collection_name "profiles"

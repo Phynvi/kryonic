@@ -15,11 +15,11 @@ def on_chat(trigger = :default, &block)
 end
 
 def on_command(name, rights = :player, &block)
-  HOOKS[:command][name] = lambda {|player, params|
+  HOOKS[:command][name] = lambda do |player, params|
     if Calyx::World::RIGHTS.index(player.rights) >= Calyx::World::RIGHTS.index(rights)
       block.call(player, params)
     end
-  }
+  end
 end
 
 # Interface

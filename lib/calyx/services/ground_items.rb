@@ -1,5 +1,7 @@
 module Calyx::GroundItems
+
   class GroundItem
+
     attr :item
     attr :location
     attr :player
@@ -24,9 +26,9 @@ module Calyx::GroundItems
     
     def make_global
       @global = true
-      WORLD.region_manager.get_local_players(@location).each {|player|
+      WORLD.region_manager.get_local_players(@location).each do |player|
         player.io.send_grounditem_creation(self) unless player.eql?(@player)
-      }
+      end
     end
     
     def remove
@@ -37,7 +39,9 @@ module Calyx::GroundItems
       @region.ground_items.delete self
       
       if @global
-        WORLD.region_manager.get_local_players(@location).each {|p| p.io.send_grounditem_removal self }
+        WORLD.region_manager.get_local_players(@location).each do |p|
+          p.io.send_grounditem_removal self
+        end
       else
         @player.io.send_grounditem_removal self
       end
@@ -45,6 +49,7 @@ module Calyx::GroundItems
   end
   
   class GroundItemEvent < Calyx::Engine::Event
+
     attr :item
 
     def initialize(item)
@@ -70,6 +75,7 @@ module Calyx::GroundItems
   end
   
   class PickupItemAction < Calyx::Engine::Action
+
     attr :item
     
     def initialize(player, item)
