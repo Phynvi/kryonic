@@ -58,10 +58,4 @@ plugin :userinterface do
   on_player_login(:chat_effects) do |player|
     player.io.send_config 171, player.settings[:chat_effects] || 0
   end
-
-  [953, 952].each_with_index do |button, i|
-    on_int_button(button) do |player|
-      player.io.send_message "dicks #{i}"
-    end
-  end
 end

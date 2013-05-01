@@ -19,11 +19,15 @@ plugin :userinterface do
     end
     
     def registered
-      WORLD.players.each {|player| player.var.pm.register(@player) if player && player.var.pm }
+      WORLD.players.each do |player|
+        player.var.pm.register(@player) if player && player.var.pm
+      end
     end
     
     def unregistered
-      WORLD.players.each {|player| player.var.pm.unregister(@player) if player && player.var.pm }
+      WORLD.players.each do |player|
+        player.var.pm.unregister(@player) if player && player.var.pm
+      }
     end
     
     def register(player)
@@ -38,7 +42,7 @@ plugin :userinterface do
     
     def send_message(to, packet)
       message = packet.read_bytes(packet.buffer.size)
-      player = WORLD.players.find {|p| p && p.name_long == to }
+      player = WORLD.players.find { |p| p && p.name_long == to }
         
       if player
         bldr = Calyx::Net::PacketBuilder.new(196, :VAR)
@@ -57,16 +61,14 @@ plugin :userinterface do
     end
     
     def send_friends(list)
-      list.each {|friend| send_friend friend }
+      list.each { |friend| send_friend friend }
     end
   
     def send_ignores(list)
       unless list.empty?
         bldr = Calyx::Net::PacketBuilder.new(214)
         
-        list.each {|user|
-          bldr.add_long user
-        }
+        list.each { |user| bldr.add_long user }
       
         @player.connection.send_data bldr.to_packet
       end
@@ -78,7 +80,7 @@ plugin :userinterface do
     end
     
     def get_world(friend)
-      WORLD.players.find {|p| p && p.name_long == friend } ? 1 : 0
+      WORLD.players.find { |p| p && p.name_long == friend } ? 1 : 0
     end
     
     def last_index

@@ -1,5 +1,5 @@
 # Walking
-on_packet(164, 248, 98) {|player, packet|
+on_packet(164, 248, 98) do |player, packet|
   # Calculate step length
   size = packet.buffer.size
   size = size-14 if packet.opcode == 248
@@ -26,11 +26,11 @@ on_packet(164, 248, 98) {|player, packet|
   
   player.walking_queue.add_step first_x, first_y
   
-  path.each {|step|
+  path.each do |step|
     x = step[0]+first_x
     y = step[1]+first_y
     player.walking_queue.add_step x, y
-  }
+  end
   
   player.walking_queue.finish
-}
+end

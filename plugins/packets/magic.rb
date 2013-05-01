@@ -1,5 +1,5 @@
 # Magic on NPC
-on_packet(131) {|player, packet|
+on_packet(131) do |player, packet|
   id = packet.read_leshort_a.ushort
   spell = packet.read_short_a.ushort
   
@@ -11,15 +11,11 @@ on_packet(131) {|player, packet|
   
   next unless player.location.within_interaction_distance?(target.location)
   
-  handler = HOOKS[:magic_on_npc][spell]
-            
-  if handler.instance_of?(Proc)
-    handler.call(player, target)
-  end
-}
+  Calyx::Plugins.run_hook(:magic_on_npc, spell, [player, target])
+end
 
 # Magic on player
-on_packet(249) {|player, packet|
+on_packet(249) do |player, packet|
   id = packet.read_short_a.ushort
   spell = packet.read_leshort.ushort
   
@@ -28,15 +24,11 @@ on_packet(249) {|player, packet|
   
   next unless player.location.within_interaction_distance?(target.location)
   
-  handler = HOOKS[:magic_on_player][spell]
-            
-  if handler.instance_of?(Proc)
-    handler.call(player, target)
-  end
-}
+  Calyx::Plugins.run_hook(:magic_on_player, spell, [player, target])
+end
 
 # Magic on inventory item
-on_packet(237) {|player, packet|
+on_packet(237) do |player, packet|
   item_slot = packet.read_short
   item_id = packet.read_short_a
   interface_id = packet.read_short
@@ -44,15 +36,11 @@ on_packet(237) {|player, packet|
   
   raise "invalid used slot #{item_slot} in interface #{interface_id}" unless valid_int_slot?(item_slot, interface_id)
 
-  handler = HOOKS[:magic_on_item][spell]
-          
-  if handler.instance_of?(Proc)
-    handler.call(player, item_id, item_slot)
-  end
-}
+  Calyx::Plugins.run_hook(:magic_on_item, spell, [player, item_id, item_slot])
+end
 
 # Magic on floor item
-on_packet(181) {|player, packet|
+on_packet(181) do |player, packet|
   item_y = packet.read_leshort
   item_id = packet.read_short.ushort
   item_x = packet.read_leshort
@@ -64,11 +52,7 @@ on_packet(181) {|player, packet|
   next unless item != nil
   next unless player.location.within_interaction_distance?(item.location)
 
-  handler = HOOKS[:magic_on_flooritem][[item_id, spell]]
+  Calyx::Plugins.run_hook(:magic_on_flooritem, [item_id, spell], [player, item])
           
   player.walking_queue.reset
-  
-  if handler.instance_of?(Proc)
-    handler.call(player, item)
-  end
-}
+end
