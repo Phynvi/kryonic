@@ -27,6 +27,7 @@ plugin :woodcutting do
   end
 
   class WoodcuttingAction < Calyx::Actions::HarvestingAction
+    
     attr_accessor :cycle_count
     attr_accessor :tree
     attr_accessor :axe

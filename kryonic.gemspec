@@ -16,7 +16,7 @@ Gem::Specification.new do |s|
   s.extra_rdoc_files = %w( README.md CHANGELOG.md LICENSE )
   s.executables      = 'kryonic'
 
-  s.add_runtime_dependency 'eventmachine',      '~> 0.12'
+  s.add_runtime_dependency 'eventmachine',      '~> 1.0.3'
   s.add_runtime_dependency 'sqlite3',           '~> 1.3'
   s.add_runtime_dependency 'to_regexp',         '~> 0.1'
   s.add_runtime_dependency 'xml-simple',        '~> 1.1'
