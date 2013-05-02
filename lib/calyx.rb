@@ -3,6 +3,7 @@ require 'eventmachine'
 require 'sqlite3'
 require 'rufus/scheduler'
 require 'ostruct'
+require 'to_regexp'
 
 module Calyx
   autoload :Server,             'calyx/server'

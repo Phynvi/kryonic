@@ -44,12 +44,11 @@ module Calyx
       load_int_hooks
       load_defs
       load_hooks
-      #load_config
+      load_config
       bind
     end
     
     def reload
-      HOOKS.clear
       load_hooks
       load_int_hooks
       Calyx::Net.load_packets
@@ -75,15 +74,12 @@ module Calyx
     
     def load_defs
       Calyx::Item::ItemDefinition.load
-      
-      # Equipment
-      #Calyx::Equipment.load
     end
     
     def load_config
-      WORLD.shop_manager.load_shops
-      WORLD.door_manager.load_single_doors
-      WORLD.door_manager.load_double_doors
+      #WORLD.shop_manager.load_shops
+      #WORLD.door_manager.load_single_doors
+      #WORLD.door_manager.load_double_doors
       
       Calyx::World::NPCSpawns.load
       Calyx::World::ItemSpawns.load

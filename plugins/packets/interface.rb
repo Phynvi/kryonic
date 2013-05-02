@@ -4,11 +4,13 @@ on_packet(185) do |player, packet|
 
   handler = HOOKS[:int_button][button]
   
-  if handler.instance_of?(Proc)
-    handler.call(player)
-  else
-    Logging.logger['packets'].warn "Unhandled action button: #{button}"
-  end
+#  if handler.instance_of?(Proc)
+#    handler.call(player)
+#  else
+#    Logging.logger['packets'].warn "Unhandled action button: #{button}"
+#  end
+
+  Calyx::Plugins.run_hook(:int_button, button, [player])
 end
 
 # Enter amount

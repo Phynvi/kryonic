@@ -36,10 +36,10 @@ module Calyx::World
         handler = HOOKS[:npc_option2][data['id'].to_i]
 
         if !handler.instance_of?(Proc)
-          on_npc_option2(data['id'].to_i) do |player, npc|
-            Calyx::Shops::ShopManager.open(data['shop'].to_i, player)
-            player.interacting_entity = npc
-          end
+          #on_npc_option2(data['id'].to_i) do |player, npc|
+          #  Calyx::Shops::ShopManager.open(data['shop'].to_i, player)
+          #  player.interacting_entity = npc
+          #end
         end
       end
     end
