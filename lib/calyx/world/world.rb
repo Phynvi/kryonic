@@ -70,14 +70,12 @@ module Calyx::World
       bldr.add_byte 0
       
       player.connection.send_data bldr.to_packet
-      
-      HOOKS[:player_login].each do |k, v| 
-        begin
-          v.call(player)
-        rescue Exception => e
-          PLUGIN_LOG.error "Unable to run login hook #{k}"
-          PLUGIN_LOG.error e
-        end
+
+      begin
+        Calyx::Plugins.run_hook(:player_login, nil, [player])
+      rescue Exception => e
+        PLUGIN_LOG.error "Unable to run login hook #{k}"
+        PLUGIN_LOG.error e
       end
       
       player.io.send_login
@@ -85,13 +83,11 @@ module Calyx::World
     
     def unregister(player, single=true)
       if @players.include?(player)
-        HOOKS[:player_logout].each do |k, v| 
-          begin
-            v.call(player)
-          rescue Exception => e
-            PLUGIN_LOG.error "Unable to run logout hook #{k}"
-            PLUGIN_LOG.error e
-          end
+        begin
+          Calyx::Plugins.run_hook(:player_logout, nil, [player])
+        rescue Exception => e
+          PLUGIN_LOG.error "Unable to run logout hook #{k}"
+          PLUGIN_LOG.error e
         end
       
         player.destroy

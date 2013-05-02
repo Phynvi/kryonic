@@ -1,5 +1,9 @@
 plugin :test do 
 
+  on_player_login(:equipment) do |player|
+    player.io.send_sidebar_interfaces
+  end
+
   on_command("reload") do |player, params|
     player.io.send_message "Reloading..." 
     SERVER.reload

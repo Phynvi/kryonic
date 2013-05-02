@@ -20,9 +20,11 @@ on_packet(208) do |player, packet|
     enter_amount_slot = player.interface_state.enter_amount_slot
     enter_amount_id = player.interface_state.enter_amount_id
     
-    Calyx::Plugins.run_hook(:int_enteramount,
-     [player.interface_state.enter_amount_interface,
-     [player, enter_amount_id, enter_amount_slot, amount]])
+    Calyx::Plugins.run_hook(
+      :int_enteramount,
+      [player.interface_state.enter_amount_interface],
+      [player, enter_amount_id, enter_amount_slot, amount]
+    )
   end
 end
 

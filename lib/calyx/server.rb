@@ -57,13 +57,7 @@ module Calyx
     
     # Load hooks
     def load_hooks
-      #Dir["./plugins/*.rb"].each { |file| load file }
-
-      load "./plugin_rewrite/woodcutting/woodcutting.rb"
-
-      plugin = Calyx::Plugins.get(:woodcutting)
-
-      Calyx::Plugins.run_loader(:woodcutting)
+      Calyx::Plugins.load_all
     end
     
     def load_int_hooks

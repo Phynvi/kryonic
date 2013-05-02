@@ -2,35 +2,71 @@ require 'calyx/plugins/hooks'
 
 module Calyx::Plugins
 
+  LOG = Logging.logger['plugin']
+
   @plugins = {}
 
   def self.register(plugin)
-    @plugins[plugin.name] = plugin
-
-    puts "Registered plugin #{plugin.name}"
+    unless @plugins.has_key?(plugin.name)
+      @plugins[plugin.name] = plugin
+    end
   end
 
   def self.run_hook(hook, params, block_args)
+    LOG.debug "Calling hook #{hook}"
     plugins = @plugins.values.find_all { |plugin| plugin.provides?(hook) }
 
     plugins.each do |plugin|
-      hook_block = plugin.hooks[hook][params]
+      stack = []
 
-      if hook_block.instance_of?(Proc)
-        hook_block.call(*block_args)
+      if params
+        block = plugin.hooks[hook][params]
+        stack.push(block) if block.instance_of?(Proc)
+      else
+        plugin.hooks[hook].each do |trigger, block|
+          stack.push block
+        end
+      end
+
+      stack.each do |block|
+        block.call(*block_args)
       end
     end
   end
 
-  def self.run_loader(plugin)
-    plugin = @plugins[plugin]
+  def self.load_all
+    LOG.info "Starting plugin load"
 
-    plugin.hooks[:plugin_load].each do |hook|
-      puts "Running loader hook!"
+    # Load each script
+    Dir['./plugin_rewrite/*/'].each do |folder|
+      name = File.basename(folder).to_sym
 
-      hook.call
+      LOG.info "Found plugin: #{name}"
+
+      scripts = Dir[File.join(folder, "*.rb")]
+
+      scripts.each do |script|
+        LOG.debug "  #{File.basename(script)}"
+        load script
+      end
+    end
+
+    # Run all loaders
+    @plugins.values.each do |plugin|
+      plugin.hooks[:plugin_load].each do |hook|
+        LOG.debug "[#{plugin.name}] running on_load ..."
+        hook.call
+      end
     end
   end
+
+=begin
+  load "./plugin_rewrite/woodcutting/woodcutting.rb"
+
+  #plugin = Calyx::Plugins.get(:woodcutting)
+
+  #Calyx::Plugins.run_loader(:woodcutting)
+=end
 
   def self.get(plugin)
     @plugins[plugin]
@@ -61,8 +97,14 @@ module Calyx::Plugins
 end
 
 def plugin(name, &block)
-  plugin = Calyx::Plugins::Plugin.new(name)
+  plugin = Calyx::Plugins.get(name)
+
+  unless plugin
+    plugin = Calyx::Plugins::Plugin.new(name)
+  end
+
   plugin.instance_eval(&block)
+
   Calyx::Plugins.register(plugin)
 end
 

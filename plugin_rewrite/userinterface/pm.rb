@@ -27,7 +27,7 @@ plugin :userinterface do
     def unregistered
       WORLD.players.each do |player|
         player.var.pm.unregister(@player) if player && player.var.pm
-      }
+      end
     end
     
     def register(player)

@@ -7,7 +7,6 @@ plugin :woodcutting do
     # Hook each tree object ID
     @trees.each do |tree|
       tree[:objects].each do |id|
-        puts "hooking into #{id}"
         on_obj_option(id) do |player, loc|
           # Change object test
           # object = Calyx::Objects::Object.new(1342, loc, 0, 10, 1278, loc, 0, 3)
@@ -77,7 +76,7 @@ plugin :woodcutting do
     
     def experience; @tree[:xp] end
     
-    def animation; Calyx::World::Animation.new(@axe[:animation]) end
+    def animation; Calyx::Model::Animation.new(@axe[:animation]) end
     
     def skill; :woodcutting end
     
