@@ -1,63 +1,66 @@
-module Cooking
-  @@stoves = [114, 5981, 6093, 6094, 6095, 6096]
-  @@food = [
-    {:raw => 2307, :burnt => 2311, :cooked => 2309, :xp => 40, :lvl => 1, :stop => 50},
-    {:raw => 321, :burnt => 323, :cooked => 319, :xp => 30, :lvl => 1, :stop => 34},
-  ]
+plugin :cooking do
+
+  on_load do
+    @stoves = load_yaml("stoves.yaml")
+    @food = load_yaml("food.yaml")
+
+    # Hook each food on stove
+    @food.each do |food|
+      @stoves.each do |stove|
+        item = food[:raw]
+        on_item_on_obj(item, stove) do |player, loc|
+          if player.inventory.count(item) > 1
+            player.io.send_chat_interface 1743
+            player.io.send_interface_model 13716, 175, item
+            player.io.send_string 13717, Calyx::Item::ItemDefinition.for_id(item).name
+          else
+            player.action_queue.add CookAction.new(player, loc, item, self)
+          end
+        end
+      end
+    end
+  end
   
-  def self.get_food(id)
-    @@food.find {|v| v[:raw] == id}
+  def get_food(id)
+    @food.find { |v| v[:raw] == id}
   end
     
-  def self.is_food?(id)
+  def is_food?(id)
    get_food(id) != nil
   end
   
-  @@food.each {|food|
-    @@stoves.each {|stove|
-      item = food[:raw]
-      on_item_on_obj(item, stove) {|player, loc|
-        if player.inventory.count(item) > 1
-          player.io.send_chat_interface 1743
-          player.io.send_interface_model 13716, 175, item
-          player.io.send_string 13717, Calyx::Item::ItemDefinition.for_id(item).name
-        else
-          player.action_queue.add CookAction.new(player, loc, item)
-        end
-      }
-    }
-  }
-  
-  on_int_button(13720) {|player|
+  on_int_button(13720) do |player|
     player.action_queue.add CookAction.new(player, player.used_loc, player.used_item)
-  }
+  end
   
-  on_int_button(13719) {|player|
+  on_int_button(13719) do |player|
     player.action_queue.add CookAction.new(player, player.used_loc, player.used_item, 5)
-  }
+  end
    
-  on_int_button(13717) {|player|
+  on_int_button(13717) do |player|
     player.action_queue.add CookAction.new(player, player.used_loc, player.used_item, player.inventory.count(player.used_item))
-  }
+  end
   
-  on_int_button(13718) {|player|
+  on_int_button(13718) do |player|
     player.interface_state.open_amount_interface(1743, -1, -1)
-  }
+  end
   
-  on_int_enter_amount(1743) {|player, enterAmountId, enterAmountSlot, amount|
+  on_int_enter_amount(1743) do |player, enterAmountId, enterAmountSlot, amount|
     player.action_queue.add CookAction.new(player, player.used_loc, player.used_item, amount)
-  }
+  end
   
   class CookAction < Calyx::Engine::Action
+
     attr_accessor :face
     attr_accessor :food
     attr_accessor :amount
     attr_accessor :count
     
-    def initialize(player, face, item, amount = 1)
+    def initialize(player, face, item, amount = 1, plugin)
       super(player, 0)
       @face = face
-      @food = ::Cooking.get_food(item)
+      @plugin = plugin
+      @food = @plugin.get_food(item)
       @amount = amount
       @count = 0
       @stage = :precheck
@@ -121,12 +124,8 @@ module Cooking
       @count += 1
     end
     
-    def queue_policy
-      Calyx::Engine::QueuePolicy::ALWAYS
-    end
+    def queue_policy; Calyx::Engine::QueuePolicy::ALWAYS end
     
-    def walkable_policy
-      Calyx::Engine::WalkablePolicy::WALKABLE
-    end
+    def walkable_policy; Calyx::Engine::WalkablePolicy::WALKABLE end
   end
 end

@@ -29,12 +29,12 @@ plugin :equipment do
 
   def is(item, type)
     name = item.definition.name.downcase
-    slot = @slots.find {|e| e[:check] == type }
-    slot[:names].find {|s| name.include?(s) } != nil
+    slot = @slots.find { |e| e[:check] == type }
+    slot[:names].find { |s| name.include?(s) } != nil
   end
 
   def get_exception(id)
-    item = @exceptions.find {|e| e[:id] == id }
+    item = @exceptions.find { |e| e[:id] == id }
     item && item[:slot]
   end
 
@@ -99,7 +99,7 @@ plugin :equipment do
     end
     
     def slots_changed(container, slots)
-      slot = slots.find {|e| e == 3}
+      slot = slots.find { |e| e == 3}
       send_weapon unless slot == nil
     end
     
@@ -123,13 +123,13 @@ plugin :equipment do
     private
     
     def find_sidebar_interface(name)
-      SIDEBARS.each {|matcher, data|
+      SIDEBARS.each do |matcher, data|
         formatted_name = data[:type] == :generic ? filter_name(name) : name
         
         if formatted_name =~ matcher
           return data[:id]
         end
-      }
+      end
       
       2423
     end
@@ -142,7 +142,7 @@ plugin :equipment do
     
     def filter_name(name)
       name = name.dup
-      MATERIALS.each {|m| name.gsub!(Regexp.new(m), "") }
+      MATERIALS.each { |m| name.gsub!(Regexp.new(m), "") }
       name.strip
     end
   end
