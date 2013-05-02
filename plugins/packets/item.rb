@@ -246,12 +246,8 @@ on_packet(192) do |player, packet|
   
   player.used_loc = loc
   player.used_item = item_id
-  
-  handler = HOOKS[:item_on_obj][[item_id, obj_id]]
-      
-  if handler.instance_of?(Proc)
-    handler.call(player, loc)
-  else
+
+  unless Calyx::Plugins.run_one(:item_on_obj, [item_id, obj_id], [player, loc])
     player.io.send_message "Nothing interesting happens."
   end
 end

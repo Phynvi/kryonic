@@ -22,7 +22,7 @@ end
 
 # Object option 3
 on_packet(70) do |player, packet|
-  handler = HOOKS[:obj_click3][id]
-
-  Calyx::Plugins.run_hook(:obj_click3, id, [player])              
+  # TODO packet payload
+  
+  # Calyx::Plugins.run_hook(:obj_click3, id, [player])              
 end

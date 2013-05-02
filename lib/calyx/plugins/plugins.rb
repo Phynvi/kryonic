@@ -12,6 +12,23 @@ module Calyx::Plugins
     end
   end
 
+  def self.run_one(hook, params, block_args)
+    LOG.debug "{#{hook}} run_one #{params.inspect}"
+
+    plugins = @plugins.values.find_all { |plugin| plugin.provides?(hook) }
+
+    plugins.each do |plugin|
+      block = plugin.hooks[hook][params]
+
+      if block.instance_of?(Proc)
+        block.call(*block_args)
+        return true
+      end
+    end
+
+    return false
+  end
+
   def self.run_hook(hook, params, block_args)
     LOG.debug "Calling hook #{hook}"
     plugins = @plugins.values.find_all { |plugin| plugin.provides?(hook) }

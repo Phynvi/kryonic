@@ -30,18 +30,6 @@ module Calyx::World
         offsets = DIRECTIONS[npc.direction]
         npc.face(npc.location.transform(offsets[0], offsets[1], 0))
       end
-      
-      # Add shop hook if NPC owns a shop
-      if data.include?('shop')
-        handler = HOOKS[:npc_option2][data['id'].to_i]
-
-        if !handler.instance_of?(Proc)
-          #on_npc_option2(data['id'].to_i) do |player, npc|
-          #  Calyx::Shops::ShopManager.open(data['shop'].to_i, player)
-          #  player.interacting_entity = npc
-          #end
-        end
-      end
     end
   end
 end

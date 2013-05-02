@@ -1,5 +1,9 @@
 plugin :test do 
 
+  on_item_on_obj(1351, 1278) do |player, loc|
+    player.io.send_message "worked"
+  end
+
   on_command("reload") do |player, params|
     player.io.send_message "Reloading..." 
     SERVER.reload
