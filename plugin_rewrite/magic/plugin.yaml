@@ -1,0 +1,7 @@
+---
+name: magic
+description: Basic Magic skill support.
+homepage: https://github.com/kryonic/magic_plugin
+author: kryonic
+version: 0.0.1
+git: https://github.com/kryonic/magic_plugin.git

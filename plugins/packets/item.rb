@@ -80,7 +80,7 @@ on_packet(135) do |player, packet|
   
   raise "invalid slot #{slot} in interface #{interface_id}" unless valid_int_slot?(slot, interface_id)
   
-  if HOOKS[:int_enteramount].key?(interface_id) && HOOKS[:int_enteramount][interface_id].kind_of?(Proc)
+  Calyx::Plugins.run_hook(:int_enteramount, interface_id, []) do |block, block_args|
     player.interface_state.open_amount_interface(interface_id, slot, id)
   end
 end

@@ -1,0 +1,7 @@
+---
+name: container
+description: Bank and Inventory support.
+homepage: https://github.com/kryonic/container_plugin
+author: kryonic
+version: 0.0.1
+git: https://github.com/kryonic/container_plugin.git

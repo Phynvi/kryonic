@@ -37,7 +37,9 @@ module Calyx::Plugins
         block = plugin.hooks[hook][params]
         stack.push(block) if block.instance_of?(Proc)
       else
-        plugin.hooks[hook].each { |trigger, block| stack.push(block) }
+        plugin.hooks[hook].each do |trigger, block|
+          stack.push(block) if block.instance_of?(Proc)
+        end
       end
 
       stack.each do |block|

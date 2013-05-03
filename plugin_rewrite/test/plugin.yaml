@@ -1,0 +1,7 @@
+---
+name: test
+description: Test commands for development.
+homepage: https://github.com/kryonic/test_plugin
+author: kryonic
+version: 0.0.1
+git: https://github.com/kryonic/test_plugin.git
