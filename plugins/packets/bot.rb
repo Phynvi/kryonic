@@ -7,14 +7,15 @@ on_packet(241) do |player, packet|
   y = coords / 765
   x = coords - (y * 765)
 
-  HOOKS[:mouse_click].each { |k, v| v.call(player, x, y, button) }
+  Calyx::Plugins.run_hook(:mouse_click, nil, [player, x, y, button])
 end
 
 # Camera
 on_packet(86) do |player, packet|
   height = (packet.read_short.ushort - 128).ubyte
   rotation = (packet.read_short_a.ushort * 45) >> 8
-  HOOKS[:camera_move].each { |k, v| v.call(player, rotation, height) }
+
+  Calyx::Plugins.run_hook(:camera_move, nil, [player, rotation, height])
 end
 
 # Quiet packet handler

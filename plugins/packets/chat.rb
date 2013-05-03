@@ -19,10 +19,10 @@ on_packet(4) do |player, packet|
   
   default = true
   
-  HOOKS[:chat].each do |k, v| 
-    default &= v.call(player, effect, color, message) != :nodefault
+  Calyx::Plugins.run_hook(:chat, nil, [player, effect, color, message]) do |block, block_args|
+    default &= block.call(*block_args) != :nodefault
   end
-  
+
   # Send to all clients
   if default
     packed = Calyx::Misc::TextUtils.repack(size, packet)

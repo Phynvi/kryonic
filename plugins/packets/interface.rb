@@ -2,15 +2,9 @@
 on_packet(185) do |player, packet|
   button = packet.read_short
 
-  handler = HOOKS[:int_button][button]
-  
-#  if handler.instance_of?(Proc)
-#    handler.call(player)
-#  else
-#    Logging.logger['packets'].warn "Unhandled action button: #{button}"
-#  end
-
-  Calyx::Plugins.run_hook(:int_button, button, [player])
+  unless Calyx::Plugins.run_one(:int_button, button, [player])
+    Logging.logger['packets'].warn "Unhandled action button: #{button}"
+  end
 end
 
 # Enter amount
@@ -32,11 +26,7 @@ end
 
 # Close interface
 on_packet(130) do |player, packet|
-  handler = HOOKS[:int_close][player.interface_state.current_interface]
-  
-  if handler.instance_of?(Proc)
-    handler.call(player)
-  else 
+  unless Calyx::Plugins.run_one(:int_close, player.interface_state.current_interface, [player])
     player.interface_state.interface_closed
   end
 end

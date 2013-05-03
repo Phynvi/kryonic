@@ -202,11 +202,8 @@ on_packet(53) do |player, packet|
   used_item = player.inventory.items[used_slot].id
   target_item = player.inventory.items[target_slot].id
   ingredients = [used_item, target_item].sort
-  handler = HOOKS[:item_on_item][ingredients]
       
-  if handler.instance_of?(Proc)
-    handler.call(player)
-  else
+  unless Calyx::Plugins.run_one(:item_on_item, ingredients, [player])
     player.io.send_message "Nothing interesting happens."
   end
 end
@@ -224,11 +221,7 @@ on_packet(25) do |player, packet|
 
   raise "invalid used slot #{item_slot} in interface #{interface_id}" unless valid_int_slot?(item_slot, interface_id)
   
-  handler = HOOKS[:item_on_floor][[item_id, floor_id]]
-            
-  if handler.instance_of?(Proc)
-    handler.call(player)
-  else
+  unless Calyx::Plugins.run_one(:item_on_floor, [item_id, floor_id], [player])
     player.io.send_message "Nothing interesting happens."
   end
 end

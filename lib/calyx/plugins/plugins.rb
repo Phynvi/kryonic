@@ -13,8 +13,6 @@ module Calyx::Plugins
   end
 
   def self.run_one(hook, params, block_args)
-    LOG.debug "{#{hook}} run_one #{params.inspect}"
-
     plugins = @plugins.values.find_all { |plugin| plugin.provides?(hook) }
 
     plugins.each do |plugin|
@@ -30,7 +28,6 @@ module Calyx::Plugins
   end
 
   def self.run_hook(hook, params, block_args)
-    LOG.debug "Calling hook #{hook}"
     plugins = @plugins.values.find_all { |plugin| plugin.provides?(hook) }
 
     plugins.each do |plugin|
@@ -40,13 +37,15 @@ module Calyx::Plugins
         block = plugin.hooks[hook][params]
         stack.push(block) if block.instance_of?(Proc)
       else
-        plugin.hooks[hook].each do |trigger, block|
-          stack.push block
-        end
+        plugin.hooks[hook].each { |trigger, block| stack.push(block) }
       end
 
       stack.each do |block|
-        block.call(*block_args)
+        if block_given?
+          yield(block, block_args)
+        else
+          block.call(*block_args)
+        end
       end
     end
   end
