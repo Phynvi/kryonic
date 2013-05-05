@@ -1,0 +1,14 @@
+<h2>Plugin list</h2>
+
+<ul>
+<% $index.each do |k, v| %>
+  <li><%= k %> - <%= v %></li>
+<% end %>
+</ul>
+
+<h2>Import plugin</h2>
+
+<form method="post" action="/upload" enctype="multipart/form-data">
+  <input type="file" name="myfile" />
+  <input type="submit" value="Upload" />
+</form>
